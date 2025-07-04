@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Codeforces Tutor{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="jumbotron bg-primary text-white p-5 rounded mb-4">
+            <h1 class="display-4">
+                <i class="fas fa-trophy"></i> Welcome to Codeforces Tutor!
+            </h1>
+            <p class="lead">A simple tool to help you practice Codeforces problems and analyze your performance.</p>
+            {% if not session.username %}
+                <hr class="my-4">
+                <p>Get started by setting your Codeforces username.</p>
+                <a class="btn btn-light btn-lg" href="{{ url_for('set_username') }}" role="button">
+                    <i class="fas fa-user-plus"></i> Set Username
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card feature-card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-filter fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Question Filtering</h5>
+                <p class="card-text">Find Codeforces problems based on your preferences: rating range, contest type, and difficulty level.</p>
+                <a href="{{ url_for('question_filtering') }}" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Filter Problems
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card feature-card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                <h5 class="card-title">User Analytics</h5>
+                <p class="card-text">Analyze your Codeforces performance with detailed statistics on submissions, languages, and contest history.</p>
+                <a href="{{ url_for('user_analytics') }}" class="btn btn-success">
+                    <i class="fas fa-analytics"></i> View Analytics
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card feature-card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-user-cog fa-3x text-warning mb-3"></i>
+                <h5 class="card-title">Username Settings</h5>
+                <p class="card-text">Set or change your Codeforces username to personalize your experience and track your progress.</p>
+                <a href="{{ url_for('set_username') }}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> {% if session.username %}Change Username{% else %}Set Username{% endif %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if session.username %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-user"></i> Current User: {{ session.username }}
+                </h5>
+                <p class="card-text">You're all set! Choose an option above to get started with your Codeforces training.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

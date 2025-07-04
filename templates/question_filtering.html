@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Question Filtering - Codeforces Tutor{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2><i class="fas fa-filter"></i> Question Filtering</h2>
+        <p class="text-muted">Find Codeforces problems based on your preferences</p>
+        {% if username %}
+            <p><strong>Username:</strong> {{ username }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Filter Settings</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="rating_lower" class="form-label">Rating Range (Lower Bound)</label>
+                                <input type="number" class="form-control" id="rating_lower" name="rating_lower" 
+                                       min="800" max="3500" value="800" placeholder="800">
+                                <div class="form-text">Minimum rating (800 for no lower bound)</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="rating_upper" class="form-label">Rating Range (Upper Bound)</label>
+                                <input type="number" class="form-control" id="rating_upper" name="rating_upper" 
+                                       min="800" max="3500" value="3500" placeholder="3500">
+                                <div class="form-text">Maximum rating (3500 for no upper bound)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Contest Types</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Div. 1 + Div. 2" 
+                                   id="div12" name="contest_types" checked>
+                            <label class="form-check-label" for="div12">Div. 1 + Div. 2</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Div. 1" 
+                                   id="div1" name="contest_types" checked>
+                            <label class="form-check-label" for="div1">Div. 1</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Div. 2" 
+                                   id="div2" name="contest_types" checked>
+                            <label class="form-check-label" for="div2">Div. 2</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Div. 3" 
+                                   id="div3" name="contest_types" checked>
+                            <label class="form-check-label" for="div3">Div. 3</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Div. 4" 
+                                   id="div4" name="contest_types" checked>
+                            <label class="form-check-label" for="div4">Div. 4</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="question_start" class="form-label">Question Start Index</label>
+                                <input type="number" class="form-control" id="question_start" name="question_start" 
+                                       min="1" max="10" value="1" placeholder="1">
+                                <div class="form-text">Starting question number (1-indexed)</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="question_end" class="form-label">Question End Index</label>
+                                <input type="number" class="form-control" id="question_end" name="question_end" 
+                                       min="1" max="10" value="10" placeholder="10">
+                                <div class="form-text">Ending question number (1-indexed)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="contest_count" class="form-label">Recent Contests</label>
+                                <input type="number" class="form-control" id="contest_count" name="contest_count" 
+                                       min="1" max="500" value="50" placeholder="50">
+                                <div class="form-text">Number of recent contests to consider</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="max_questions" class="form-label">Maximum Questions</label>
+                                <input type="number" class="form-control" id="max_questions" name="max_questions" 
+                                       min="1" max="50" value="10" placeholder="10">
+                                <div class="form-text">Maximum number of questions to return</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('index') }}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-arrow-left"></i> Back to Home
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Filter Problems
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

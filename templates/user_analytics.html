@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+
+{% block title %}User Analytics - Codeforces Tutor{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2><i class="fas fa-chart-line"></i> User Analytics</h2>
+        <p class="text-muted">Detailed analysis of your Codeforces performance</p>
+        <p><strong>Username:</strong> {{ username }}</p>
+    </div>
+</div>
+
+{% if user_info %}
+<!-- User Information Section -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-user"></i> User Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Handle:</strong> {{ user_info.handle }}</p>
+                        {% if user_info.firstName and user_info.lastName %}
+                            <p><strong>Name:</strong> {{ user_info.firstName }} {{ user_info.lastName }}</p>
+                        {% endif %}
+                        {% if user_info.country %}
+                            <p><strong>Country:</strong> {{ user_info.country }}</p>
+                        {% endif %}
+                        {% if user_info.organization %}
+                            <p><strong>Organization:</strong> {{ user_info.organization }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Current Rating:</strong> 
+                            {% if user_info.rating %}
+                                <span class="badge bg-primary">{{ user_info.rating }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Unrated</span>
+                            {% endif %}
+                        </p>
+                        <p><strong>Max Rating:</strong> 
+                            {% if user_info.maxRating %}
+                                <span class="badge bg-success">{{ user_info.maxRating }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">N/A</span>
+                            {% endif %}
+                        </p>
+                        <p><strong>Rank:</strong> {{ user_info.rank if user_info.rank else 'N/A' }}</p>
+                        <p><strong>Max Rank:</strong> {{ user_info.maxRank if user_info.maxRank else 'N/A' }}</p>
+                        <p><strong>Contribution:</strong> {{ user_info.contribution if user_info.contribution else 0 }}</p>
+                        <p><strong>Friends:</strong> {{ user_info.friendOfCount if user_info.friendOfCount else 0 }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if stats %}
+<!-- Submission Statistics Section -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-bar"></i> Submission Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Total Submissions:</strong> {{ stats.total_submissions }}</p>
+                        <p><strong>Accepted Submissions:</strong> {{ stats.accepted_submissions }}</p>
+                        <p><strong>Unsolved Attempts:</strong> {{ stats.unsolved_attempts }}</p>
+                        {% if stats.total_submissions > 0 %}
+                            <p><strong>Acceptance Rate:</strong> {{ "%.1f"|format((stats.accepted_submissions / stats.total_submissions) * 100) }}%</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Unique Problems Attempted:</strong> {{ stats.unique_problems_attempted }}</p>
+                        <p><strong>Unique Problems Solved:</strong> {{ stats.unique_problems_solved }}</p>
+                        <p><strong>Contest Participation:</strong> {{ stats.contest_participation|length }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Verdict Breakdown Section -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-gavel"></i> Verdict Breakdown</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>✅ <strong>Accepted:</strong> {{ stats.accepted_submissions }}</p>
+                        <p>❌ <strong>Wrong Answer:</strong> {{ stats.wrong_answer }}</p>
+                        <p>⏰ <strong>Time Limit Exceeded:</strong> {{ stats.time_limit_exceeded }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p>💥 <strong>Runtime Error:</strong> {{ stats.runtime_error }}</p>
+                        <p>🔧 <strong>Compilation Error:</strong> {{ stats.compilation_error }}</p>
+                        <p>❓ <strong>Other Verdicts:</strong> {{ stats.other_verdicts }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Programming Languages Section -->
+{% if stats.languages %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-code"></i> Programming Languages Used</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Language</th>
+                                <th>Submissions</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for lang, count in stats.languages.most_common(10) %}
+                            <tr>
+                                <td>{{ lang }}</td>
+                                <td>{{ count }}</td>
+                                <td>{{ "%.1f"|format((count / stats.total_submissions) * 100) }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Problem Tags Section -->
+{% if stats.tags %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-tags"></i> Solved Problems by Tag</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Top problem categories you've solved:</p>
+                <div class="row">
+                    {% for tag, count in stats.tags.most_common(15) %}
+                    <div class="col-md-4 col-sm-6 mb-2">
+                        <span class="badge bg-info me-1">{{ tag }}</span> {{ count }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Rating Distribution Section -->
+{% if stats.rating_distribution %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-star"></i> Solved Problems by Difficulty</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Rating</th>
+                                <th>Problems Solved</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rating, count in stats.rating_distribution.items()|sort %}
+                            <tr>
+                                <td><span class="badge bg-secondary">{{ rating }}</span></td>
+                                <td>{{ count }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Recent Activity Section -->
+{% if stats.recent_activity %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-history"></i> Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Last 10 submissions:</p>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Problem</th>
+                                <th>Verdict</th>
+                                <th>Contest ID</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in stats.recent_activity %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ activity.problem_name[:40] }}{% if activity.problem_name|length > 40 %}...{% endif %}</td>
+                                <td>
+                                    {% if activity.verdict == 'OK' %}
+                                        <span class="badge bg-success">✅ Accepted</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">❌ {{ activity.verdict }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ activity.contest_id }}{{ activity.index }}</td>
+                                <td>
+                                    {% if activity.timestamp %}
+                                        {{ activity.timestamp|timestamp_to_date }}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Contest Performance Section -->
+{% if rating_history %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-trophy"></i> Contest Performance</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Total Rated Contests:</strong> {{ rating_history|length }}</p>
+
+                {% if rating_history|length >= 2 %}
+                <h6>Recent Contest Performance:</h6>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Contest</th>
+                                <th>Old Rating</th>
+                                <th>New Rating</th>
+                                <th>Change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contest in rating_history[-5:] %}
+                            <tr>
+                                <td>{{ contest.contestName[:50] }}{% if contest.contestName|length > 50 %}...{% endif %}</td>
+                                <td>{{ contest.oldRating }}</td>
+                                <td>{{ contest.newRating }}</td>
+                                <td>
+                                    {% set change = contest.newRating - contest.oldRating %}
+                                    {% if change >= 0 %}
+                                        <span class="badge bg-success">+{{ change }}</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">{{ change }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endif %}
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
